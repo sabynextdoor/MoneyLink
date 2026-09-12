@@ -153,7 +153,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     () => {
       try {
         const saved = localStorage.getItem('cashlink-theme');
-        if (saved && ['midnight', 'cyberpunk', 'light', 'forest'].includes(saved)) {
+        if (saved && ['midnight', 'cyberpunk', 'light', 'forest', 'ocean', 'sunset', 'monochrome'].includes(saved)) {
           return saved as ThemeId;
         }
       } catch (e) {

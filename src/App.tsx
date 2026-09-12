@@ -273,17 +273,23 @@ function AppContent() {
                         {(Object.keys(themes) as Array<keyof typeof themes>).map((themeId) => {
                           const isActive = currentTheme === themeId;
                           const t = themes[themeId];
-                          const themeNames = {
+                          const themeNames: Record<string, string> = {
                             midnight: 'Midnight Void',
                             cyberpunk: 'Cyberpunk Neon',
                             light: 'Clean Light',
                             forest: 'Forest Mist',
+                            ocean: 'Ocean Depths',
+                            sunset: 'Sunset Glow',
+                            monochrome: 'Monochrome',
                           };
-                          const themeDescs = {
+                          const themeDescs: Record<string, string> = {
                             midnight: 'Deep space darkness with cyan accents',
                             cyberpunk: 'High contrast neon with purple and pink',
                             light: 'Minimalist light theme with blue accents',
                             forest: 'Natural green tones with earth accents',
+                            ocean: 'Deep blue gradients with teal highlights',
+                            sunset: 'Warm orange and pink gradients',
+                            monochrome: 'Pure grayscale elegance',
                           };
 
                           return (

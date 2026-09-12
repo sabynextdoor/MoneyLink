@@ -3,7 +3,7 @@
 // "Neo-Academia meets Spatial FinTech"
 // ============================================================================
 
-export type ThemeId = 'midnight' | 'cyberpunk' | 'light' | 'forest';
+export type ThemeId = 'midnight' | 'cyberpunk' | 'light' | 'forest' | 'ocean' | 'sunset' | 'monochrome';
 
 export interface Theme {
   id: ThemeId;
@@ -184,6 +184,114 @@ export const themes: Record<ThemeId, Theme> = {
         bg: 'rgba(0, 221, 136, 0.03)',
         bgHover: 'rgba(0, 221, 136, 0.08)',
         border: 'rgba(0, 221, 136, 0.15)',
+      },
+    },
+  },
+  ocean: {
+    id: 'ocean',
+    name: 'Ocean Depths',
+    description: 'Deep blue gradients with teal highlights',
+    colors: {
+      background: {
+        primary: '#021019',
+        secondary: '#051f2e',
+        tertiary: '#0a2d42',
+        elevated: '#0f3d57',
+      },
+      accent: {
+        primary: '#00D4FF',
+        secondary: '#0099CC',
+        income: '#00FFCC',
+        expense: '#FF6B9D',
+        savings: '#00CCFF',
+      },
+      text: {
+        primary: '#E0F7FF',
+        secondary: '#B3E5FC',
+        tertiary: '#81D4FA',
+        muted: '#4FC3F7',
+      },
+      border: {
+        subtle: 'rgba(0, 212, 255, 0.1)',
+        medium: 'rgba(0, 212, 255, 0.2)',
+        strong: 'rgba(0, 212, 255, 0.3)',
+      },
+      glass: {
+        bg: 'rgba(0, 212, 255, 0.03)',
+        bgHover: 'rgba(0, 212, 255, 0.08)',
+        border: 'rgba(0, 212, 255, 0.15)',
+      },
+    },
+  },
+  sunset: {
+    id: 'sunset',
+    name: 'Sunset Glow',
+    description: 'Warm orange and pink gradients',
+    colors: {
+      background: {
+        primary: '#1a0f0a',
+        secondary: '#2d1810',
+        tertiary: '#3d2218',
+        elevated: '#4f2e22',
+      },
+      accent: {
+        primary: '#FF8C42',
+        secondary: '#FF6B9D',
+        income: '#FFB347',
+        expense: '#FF4757',
+        savings: '#FFA07A',
+      },
+      text: {
+        primary: '#FFF5E6',
+        secondary: '#FFE4CC',
+        tertiary: '#FFD4B3',
+        muted: '#FFC499',
+      },
+      border: {
+        subtle: 'rgba(255, 140, 66, 0.1)',
+        medium: 'rgba(255, 140, 66, 0.2)',
+        strong: 'rgba(255, 140, 66, 0.3)',
+      },
+      glass: {
+        bg: 'rgba(255, 140, 66, 0.03)',
+        bgHover: 'rgba(255, 140, 66, 0.08)',
+        border: 'rgba(255, 140, 66, 0.15)',
+      },
+    },
+  },
+  monochrome: {
+    id: 'monochrome',
+    name: 'Monochrome',
+    description: 'Pure grayscale elegance',
+    colors: {
+      background: {
+        primary: '#000000',
+        secondary: '#1a1a1a',
+        tertiary: '#2a2a2a',
+        elevated: '#3a3a3a',
+      },
+      accent: {
+        primary: '#FFFFFF',
+        secondary: '#CCCCCC',
+        income: '#AAAAAA',
+        expense: '#888888',
+        savings: '#666666',
+      },
+      text: {
+        primary: '#FFFFFF',
+        secondary: '#CCCCCC',
+        tertiary: '#999999',
+        muted: '#666666',
+      },
+      border: {
+        subtle: 'rgba(255, 255, 255, 0.08)',
+        medium: 'rgba(255, 255, 255, 0.15)',
+        strong: 'rgba(255, 255, 255, 0.25)',
+      },
+      glass: {
+        bg: 'rgba(255, 255, 255, 0.03)',
+        bgHover: 'rgba(255, 255, 255, 0.08)',
+        border: 'rgba(255, 255, 255, 0.1)',
       },
     },
   },
