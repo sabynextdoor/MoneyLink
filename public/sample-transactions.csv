@@ -1,0 +1,41 @@
+date,description,merchant,amount,currency,type,category,notes
+2024-01-15,Part-time job paycheck,Campus Bookstore,875.00,USD,income,Income - Employment,January pay
+2024-01-01,Monthly rent,Campus Housing,-750.00,USD,expense,Housing - Rent,January rent
+2024-01-05,Electric bill,City Electric Co,-78.50,USD,expense,Housing - Utilities,
+2024-01-07,Grocery run,FreshMart Grocery,-62.30,USD,expense,Food - Groceries,Weekly groceries
+2024-01-08,Coffee and bagel,Coffee Corner,-7.50,USD,expense,Food - Dining Out,
+2024-01-10,Bus pass renewal,City Transit,-65.00,USD,expense,Transportation,Monthly pass
+2024-01-12,Freelance payment,FreelancePay,250.00,USD,income,Income - Freelance,Logo design
+2024-01-14,Pizza with friends,Pizza Palace,-24.00,USD,expense,Food - Dining Out,
+2024-01-18,Streaming subscription,StreamFlix,-15.99,USD,expense,Subscriptions,
+2024-01-20,Grocery shopping,FreshMart Grocery,-55.80,USD,expense,Food - Groceries,
+2024-01-22,Movie night,Movie Theater,-18.00,USD,expense,Entertainment,
+2024-01-25,Family support,Family Transfer,300.00,USD,income,Income - Family Support,Monthly
+2024-01-28,Haircut,Hair Studio,-30.00,USD,expense,Personal Care,
+2024-02-01,Monthly rent,Campus Housing,-750.00,USD,expense,Housing - Rent,February rent
+2024-02-01,Family support,Family Transfer,300.00,USD,income,Income - Family Support,Monthly
+2024-02-05,Electric bill,City Electric Co,-82.30,USD,expense,Housing - Utilities,
+2024-02-08,Grocery shopping,FreshMart Grocery,-58.40,USD,expense,Food - Groceries,
+2024-02-10,Bus pass,City Transit,-65.00,USD,expense,Transportation,
+2024-02-12,Freelance project,FreelancePay,180.00,USD,income,Income - Freelance,Website update
+2024-02-14,Valentine dinner,Sushi Express,-45.00,USD,expense,Food - Dining Out,Special occasion
+2024-02-15,Part-time job paycheck,Campus Bookstore,900.00,USD,income,Income - Employment,February pay
+2024-02-18,Music subscription,MusicStream,-9.99,USD,expense,Subscriptions,
+2024-02-20,Grocery run,FreshMart Grocery,-67.20,USD,expense,Food - Groceries,
+2024-02-22,Bowling night,Bowling Alley,-22.00,USD,expense,Entertainment,
+2024-02-25,Coffee run,Coffee Corner,-6.50,USD,expense,Food - Dining Out,
+2024-02-28,Gym membership,Campus Gym,-35.00,USD,expense,Personal Care,
+2024-03-01,Monthly rent,Campus Housing,-750.00,USD,expense,Housing - Rent,March rent
+2024-03-01,Family support,Family Transfer,300.00,USD,income,Income - Family Support,Monthly
+2024-03-05,Electric bill,City Electric Co,-71.80,USD,expense,Housing - Utilities,
+2024-03-07,Grocery shopping,FreshMart Grocery,-54.90,USD,expense,Food - Groceries,
+2024-03-10,Bus pass,City Transit,-65.00,USD,expense,Transportation,
+2024-03-12,Freelance work,FreelancePay,320.00,USD,income,Income - Freelance,App design
+2024-03-14,Burger lunch,Burger Barn,-14.50,USD,expense,Food - Dining Out,
+2024-03-15,Part-time job paycheck,Campus Bookstore,875.00,USD,income,Income - Employment,March pay
+2024-03-18,Streaming subscription,StreamFlix,-15.99,USD,expense,Subscriptions,
+2024-03-20,Grocery run,FreshMart Grocery,-61.30,USD,expense,Food - Groceries,
+2024-03-22,Video game,GameZone,-49.99,USD,expense,Entertainment,
+2024-03-25,Coffee,Coffee Corner,-5.75,USD,expense,Food - Dining Out,
+2024-03-28,Haircut,Hair Studio,-35.00,USD,expense,Personal Care,
+2024-03-28,Gym membership,Campus Gym,-35.00,USD,expense,Personal Care,

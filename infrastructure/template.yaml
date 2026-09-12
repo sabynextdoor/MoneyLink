@@ -1,0 +1,309 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  CashFlow Coach - Student Budget & Forecasting Assistant
+  Serverless architecture using Lambda, DynamoDB, and S3
+
+Globals:
+  Function:
+    Timeout: 30
+    Runtime: nodejs20.x
+    Environment:
+      Variables:
+        TRANSACTIONS_TABLE: !Ref TransactionsTable
+        GOALS_TABLE: !Ref GoalsTable
+        AUDIT_TABLE: !Ref AuditTable
+        UPLOADS_BUCKET: !Ref UploadsBucket
+
+Resources:
+  # ==========================================
+  # DynamoDB Tables (Single-Table Design)
+  # ==========================================
+  TransactionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: cashflow-coach-transactions
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+        - AttributeName: GSI1PK
+          AttributeType: S
+        - AttributeName: GSI1SK
+          AttributeType: S
+        - AttributeName: GSI2PK
+          AttributeType: S
+        - AttributeName: GSI2SK
+          AttributeType: S
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: GSI1-CategoryIndex
+          KeySchema:
+            - AttributeName: GSI1PK
+              KeyType: HASH
+            - AttributeName: GSI1SK
+              KeyType: RANGE
+          Projection: ALL
+        - IndexName: GSI2-StatusIndex
+          KeySchema:
+            - AttributeName: GSI2PK
+              KeyType: HASH
+            - AttributeName: GSI2SK
+              KeyType: RANGE
+          Projection: ALL
+
+  GoalsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: cashflow-coach-goals
+      BillingMode: PAY_PER_REQUEST
+      SSESpecification:
+        SSEEnabled: true
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+
+  AuditTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: cashflow-coach-audit
+      BillingMode: PAY_PER_REQUEST
+      SSESpecification:
+        SSEEnabled: true
+      TimeToLiveSpecification:
+        AttributeName: TTL
+        Enabled: true
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+
+  # ==========================================
+  # S3 Bucket for Uploads
+  # ==========================================
+  UploadsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: cashflow-coach-uploads
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders: ['*']
+            AllowedMethods: [PUT, POST, GET]
+            AllowedOrigins: ['*']
+            MaxAge: 3000
+      LifecycleConfiguration:
+        Rules:
+          - Id: DeleteOldUploads
+            Status: Enabled
+            ExpirationInDays: 90
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  # ==========================================
+  # Lambda Functions
+  # ==========================================
+  ImportHandler:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/import.handler
+      Description: Handles CSV/JSON file uploads and transaction ingestion
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /transactions/import
+            Method: POST
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TransactionsTable
+        - S3CrudPolicy:
+            BucketName: !Ref UploadsBucket
+
+  CategorizationHandler:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/categorize.handler
+      Description: Rule-based transaction categorization engine
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /transactions/categorize
+            Method: POST
+
+  ForecastHandler:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/forecast.handler
+      Description: Cash flow forecast calculation engine
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /forecast
+            Method: POST
+
+  DuplicateDetector:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/duplicates.handler
+      Description: Detects and manages duplicate transactions
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /transactions/duplicates
+            Method: GET
+
+  TransactionCRUD:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/transactions.handler
+      Description: CRUD operations for transactions
+      Events:
+        GetTransactions:
+          Type: Api
+          Properties:
+            Path: /transactions
+            Method: GET
+        UpdateTransaction:
+          Type: Api
+          Properties:
+            Path: /transactions/{id}
+            Method: PUT
+        DeleteTransaction:
+          Type: Api
+          Properties:
+            Path: /transactions/{id}
+            Method: DELETE
+
+  GoalsCRUD:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/goals.handler
+      Description: CRUD operations for savings goals
+      Events:
+        GetGoals:
+          Type: Api
+          Properties:
+            Path: /goals
+            Method: GET
+        CreateGoal:
+          Type: Api
+          Properties:
+            Path: /goals
+            Method: POST
+        UpdateGoal:
+          Type: Api
+          Properties:
+            Path: /goals/{id}
+            Method: PUT
+        DeleteGoal:
+          Type: Api
+          Properties:
+            Path: /goals/{id}
+            Method: DELETE
+
+  AuditLogger:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/audit.handler
+      Description: Append-only audit event logger
+      Events:
+        GetAuditLog:
+          Type: Api
+          Properties:
+            Path: /audit
+            Method: GET
+
+  PresignedUrlHandler:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/presign.handler
+      Description: Generates presigned S3 URLs for browser uploads
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /upload-url
+            Method: GET
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Ref UploadsBucket
+
+  # ==========================================
+  # Static Website Hosting (S3 + CloudFront)
+  # ==========================================
+  WebsiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: cashflow-coach-website
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: index.html
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  WebsiteCDN:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Origins:
+          - DomainName: !GetAtt WebsiteBucket.RegionalDomainName
+            Id: S3Origin
+            S3OriginConfig:
+              OriginAccessIdentity: ''
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          ForwardedValues:
+            QueryString: false
+        Enabled: true
+        DefaultRootObject: index.html
+
+Outputs:
+  ApiEndpoint:
+    Description: API Gateway endpoint URL
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
+  WebsiteURL:
+    Description: CloudFront distribution URL
+    Value: !GetAtt WebsiteCDN.DomainName
+  TransactionsTableArn:
+    Description: DynamoDB Transactions Table ARN
+    Value: !GetAtt TransactionsTable.Arn
+  UploadsBucketName:
+    Description: S3 Uploads Bucket Name
+    Value: !Ref UploadsBucket
