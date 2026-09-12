@@ -9,6 +9,7 @@ import {
   getDefaultGoals, getDefaultScenarios, getDefaultAssumptions
 } from '../engine/syntheticData';
 import { v4 as uuidv4 } from 'uuid';
+import type { ThemeId } from '../theme/theme';
 
 type Action =
   | { type: 'SET_TRANSACTIONS'; payload: Transaction[] }
@@ -32,7 +33,8 @@ type Action =
   | { type: 'SET_ASSUMPTIONS'; payload: ForecastAssumptions }
   | { type: 'ADD_AUDIT'; payload: AuditEvent }
   | { type: 'LOAD_STATE'; payload: AppState }
-  | { type: 'RESET_DATA' };
+  | { type: 'RESET_DATA' }
+  | { type: 'SET_THEME'; payload: ThemeId };
 
 const initialState: AppState = {
   transactions: [],
@@ -138,11 +140,29 @@ interface AppContextType {
   state: AppState;
   dispatch: React.Dispatch<Action>;
   addAuditEvent: (action: string, entityType: string, entityId: string, details: string, oldValue?: any, newValue?: any) => void;
+  currentTheme: ThemeId;
+  setTheme: (themeId: ThemeId) => void;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
 
 export function AppProvider({ children }: { children: ReactNode }) {
+  const [currentTheme, setCurrentTheme] = useReducer(
+    (state: ThemeId, action: { type: 'SET'; payload: ThemeId }) => action.payload,
+    'midnight',
+    () => {
+      try {
+        const saved = localStorage.getItem('cashlink-theme');
+        if (saved && ['midnight', 'cyberpunk', 'light', 'forest'].includes(saved)) {
+          return saved as ThemeId;
+        }
+      } catch (e) {
+        console.warn('Failed to load theme:', e);
+      }
+      return 'midnight';
+    }
+  );
+
   const [state, dispatch] = useReducer(reducer, initialState, () => {
     // Try to load from localStorage
     try {
@@ -170,6 +190,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }, [state]);
 
+  // Save theme to localStorage on change
+  useEffect(() => {
+    try {
+      localStorage.setItem('cashlink-theme', currentTheme);
+      document.documentElement.setAttribute('data-theme', currentTheme);
+    } catch (e) {
+      console.warn('Failed to save theme:', e);
+    }
+  }, [currentTheme]);
+
+  const setTheme = (themeId: ThemeId) => {
+    setCurrentTheme({ type: 'SET', payload: themeId });
+  };
+
   const addAuditEvent = (action: string, entityType: string, entityId: string, details: string, oldValue?: any, newValue?: any) => {
     dispatch({
       type: 'ADD_AUDIT',
@@ -187,7 +221,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AppContext.Provider value={{ state, dispatch, addAuditEvent }}>
+    <AppContext.Provider value={{ state, dispatch, addAuditEvent, currentTheme, setTheme }}>
       {children}
     </AppContext.Provider>
   );

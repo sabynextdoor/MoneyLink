@@ -7,18 +7,21 @@ import LuxuryTransactions from './components/LuxuryTransactions';
 import LuxuryForecast from './components/LuxuryForecast';
 import LuxuryGoals from './components/LuxuryGoals';
 import LuxurySettings from './components/LuxurySettings';
+import { themes } from './theme/theme';
 import {
   LayoutDashboard, ArrowLeftRight, TrendingUp, Target,
   Settings, Home, ArrowLeft, Search, Command, Plus,
-  Sparkles, CheckCircle2, ChevronRight, X, ArrowUpRight
+  Sparkles, CheckCircle2, ChevronRight, X, ArrowUpRight, Palette
 } from 'lucide-react';
 
 function AppContent() {
-  const { state, dispatch } = useAppState();
+  const { state, dispatch, currentTheme, setTheme } = useAppState();
   const [currentView, setCurrentView] = useState<'landing' | 'app'>('landing');
   const [activeTab, setActiveTab] = useState<'dashboard' | 'transactions' | 'forecast' | 'goals' | 'settings'>('dashboard');
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [paletteSearch, setPaletteSearch] = useState('');
+  const [isThemeDropdownOpen, setIsThemeDropdownOpen] = useState(false);
+  const themeButtonRef = useRef<HTMLButtonElement>(null);
 
   // Cmd+K / Ctrl+K keyboard shortcut
   useEffect(() => {
@@ -29,10 +32,22 @@ function AppContent() {
       }
       if (e.key === 'Escape') {
         setIsCommandPaletteOpen(false);
+        setIsThemeDropdownOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (themeButtonRef.current && !themeButtonRef.current.contains(e.target as Node)) {
+        setIsThemeDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleEnterApp = () => {
@@ -132,8 +147,17 @@ function AppContent() {
     }
   };
 
+  // Get theme colors from the theme system
+  const theme = themes[currentTheme];
+  
   return (
-    <div className="min-h-screen bg-[#070709] text-white selection:bg-cyan-500/30 selection:text-cyan-200">
+    <div 
+      className="min-h-screen selection:bg-cyan-500/30 selection:text-cyan-200 transition-colors duration-500"
+      style={{
+        background: theme.colors.background.primary,
+        color: theme.colors.text.primary,
+      }}
+    >
       {/* Navigation Header */}
       <AnimatePresence mode="wait">
         {currentView === 'app' && (
@@ -195,7 +219,7 @@ function AppContent() {
                 })}
               </nav>
 
-              {/* Right Command Palette Shortcut */}
+              {/* Right Command Palette Shortcut & Theme Selector */}
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setIsCommandPaletteOpen(true)}
@@ -207,6 +231,126 @@ function AppContent() {
                     ⌘K
                   </kbd>
                 </button>
+
+                {/* Theme Selector Button */}
+                <div className="relative">
+                  <button
+                    ref={themeButtonRef}
+                    onClick={() => setIsThemeDropdownOpen(!isThemeDropdownOpen)}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-white/60 hover:text-white transition-all text-xs"
+                    title={`Current theme: ${currentTheme}`}
+                  >
+                    <Palette className="w-3.5 h-3.5 text-purple-400" />
+                    <span className="hidden lg:inline text-[11px] font-mono capitalize">{currentTheme}</span>
+                  </button>
+
+                  {/* Theme Dropdown */}
+                  {isThemeDropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 0.96 }}
+                      className="absolute right-0 top-full mt-2 w-64 rounded-2xl border shadow-2xl overflow-hidden z-50"
+                      style={{
+                        background: theme.colors.background.elevated,
+                        borderColor: theme.colors.border.medium,
+                      }}
+                    >
+                      <div 
+                        className="p-3 border-b flex items-center gap-2"
+                        style={{
+                          borderColor: theme.colors.border.subtle,
+                          background: theme.colors.glass.bg,
+                        }}
+                      >
+                        <Palette className="w-3.5 h-3.5" style={{ color: theme.colors.accent.primary }} />
+                        <h4 className="text-xs font-semibold" style={{ color: theme.colors.text.primary }}>
+                          Select Theme
+                        </h4>
+                      </div>
+
+                      <div className="p-2 space-y-1">
+                        {(Object.keys(themes) as Array<keyof typeof themes>).map((themeId) => {
+                          const isActive = currentTheme === themeId;
+                          const t = themes[themeId];
+                          const themeNames = {
+                            midnight: 'Midnight Void',
+                            cyberpunk: 'Cyberpunk Neon',
+                            light: 'Clean Light',
+                            forest: 'Forest Mist',
+                          };
+                          const themeDescs = {
+                            midnight: 'Deep space darkness with cyan accents',
+                            cyberpunk: 'High contrast neon with purple and pink',
+                            light: 'Minimalist light theme with blue accents',
+                            forest: 'Natural green tones with earth accents',
+                          };
+
+                          return (
+                            <button
+                              key={themeId}
+                              onClick={() => {
+                                setTheme(themeId);
+                                setIsThemeDropdownOpen(false);
+                              }}
+                              className="w-full flex items-center justify-between p-3 rounded-xl transition-all group"
+                              style={{
+                                background: isActive ? `${t.colors.accent.primary}1a` : 'transparent',
+                                border: isActive ? `1px solid ${t.colors.accent.primary}4d` : '1px solid transparent',
+                              }}
+                              onMouseEnter={(e) => {
+                                if (!isActive) {
+                                  e.currentTarget.style.background = theme.colors.glass.bgHover;
+                                }
+                              }}
+                              onMouseLeave={(e) => {
+                                if (!isActive) {
+                                  e.currentTarget.style.background = 'transparent';
+                                }
+                              }}
+                            >
+                              <div className="flex items-center gap-3">
+                                <div
+                                  className="w-8 h-8 rounded-lg border"
+                                  style={{
+                                    background: `linear-gradient(135deg, ${t.colors.accent.primary} 0%, ${t.colors.accent.secondary} 100%)`,
+                                    borderColor: theme.colors.border.subtle,
+                                  }}
+                                />
+                                <div className="text-left">
+                                  <div 
+                                    className="text-xs font-semibold"
+                                    style={{ color: isActive ? t.colors.accent.primary : theme.colors.text.primary }}
+                                  >
+                                    {themeNames[themeId]}
+                                  </div>
+                                  <div className="text-[10px]" style={{ color: theme.colors.text.muted }}>
+                                    {themeDescs[themeId]}
+                                  </div>
+                                </div>
+                              </div>
+                              {isActive && (
+                                <CheckCircle2 className="w-4 h-4" style={{ color: t.colors.accent.primary }} />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      <div 
+                        className="p-3 border-t"
+                        style={{
+                          background: theme.colors.glass.bg,
+                          borderColor: theme.colors.border.subtle,
+                        }}
+                      >
+                        <p className="text-[10px] text-center" style={{ color: theme.colors.text.muted }}>
+                          Theme auto-saves to localStorage
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
               </div>
             </div>
           </motion.header>

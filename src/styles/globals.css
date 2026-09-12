@@ -3,13 +3,20 @@
 
 @layer base {
   :root {
-    /* Premium Dark Palette */
-    --bg-primary: #0a0a0a;
-    --bg-secondary: #111111;
-    --bg-tertiary: #1a1a1a;
-    --bg-elevated: #222222;
+    /* Default Theme (Midnight) - CSS Variables for theme switching */
+    --bg-primary: #050505;
+    --bg-secondary: #0A0A0F;
+    --bg-tertiary: #0D0D14;
+    --bg-elevated: #111118;
     
-    /* Accent Colors */
+    /* Accent Colors - Midnight Theme */
+    --accent-primary: #00E5FF;
+    --accent-secondary: #7000FF;
+    --accent-income: #00FFA3;
+    --accent-expense: #FF2A6D;
+    --accent-savings: #B100FF;
+    
+    /* Glow Effects */
     --accent-green: #00d084;
     --accent-green-glow: rgba(0, 208, 132, 0.4);
     --accent-coral: #ff6b6b;
@@ -20,10 +27,10 @@
     --accent-violet-glow: rgba(168, 85, 247, 0.4);
     
     /* Text */
-    --text-primary: #ffffff;
-    --text-secondary: #a0a0a0;
-    --text-tertiary: #666666;
-    --text-muted: #444444;
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --text-tertiary: #64748B;
+    --text-muted: #475569;
     
     /* Borders */
     --border-subtle: rgba(255, 255, 255, 0.06);
@@ -31,11 +38,11 @@
     --border-strong: rgba(255, 255, 255, 0.15);
     
     /* Glass */
-    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-bg: rgba(255, 255, 255, 0.025);
     --glass-bg-hover: rgba(255, 255, 255, 0.05);
     --glass-border: rgba(255, 255, 255, 0.08);
     
-    /* Backward compatibility with old theme */
+    /* Legacy Support */
     --void-primary: #050505;
     --void-deep: #0A0A0F;
     --income-primary: #00FFA3;
@@ -44,6 +51,75 @@
     --expense-secondary: #FF8A00;
     --savings-primary: #7000FF;
     --savings-secondary: #B100FF;
+  }
+  
+  /* Cyberpunk Theme */
+  [data-theme="cyberpunk"] {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #12121a;
+    --bg-tertiary: #1a1a2e;
+    --bg-elevated: #222233;
+    --accent-primary: #FF00FF;
+    --accent-secondary: #00FFFF;
+    --accent-income: #00FF99;
+    --accent-expense: #FF0066;
+    --accent-savings: #FFCC00;
+    --text-primary: #FFFFFF;
+    --text-secondary: #E0E0E0;
+    --text-tertiary: #A0A0A0;
+    --text-muted: #606060;
+    --border-subtle: rgba(255, 0, 255, 0.1);
+    --border-medium: rgba(255, 0, 255, 0.2);
+    --border-strong: rgba(255, 0, 255, 0.3);
+    --glass-bg: rgba(255, 0, 255, 0.03);
+    --glass-bg-hover: rgba(255, 0, 255, 0.08);
+    --glass-border: rgba(255, 0, 255, 0.15);
+  }
+  
+  /* Light Theme */
+  [data-theme="light"] {
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F8FAFC;
+    --bg-tertiary: #F1F5F9;
+    --bg-elevated: #E2E8F0;
+    --accent-primary: #0066FF;
+    --accent-secondary: #00C2FF;
+    --accent-income: #00AA55;
+    --accent-expense: #FF4444;
+    --accent-savings: #8844FF;
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-tertiary: #64748B;
+    --text-muted: #94A3B8;
+    --border-subtle: rgba(0, 0, 0, 0.06);
+    --border-medium: rgba(0, 0, 0, 0.1);
+    --border-strong: rgba(0, 0, 0, 0.15);
+    --glass-bg: rgba(0, 102, 255, 0.03);
+    --glass-bg-hover: rgba(0, 102, 255, 0.06);
+    --glass-border: rgba(0, 0, 0, 0.08);
+  }
+  
+  /* Forest Theme */
+  [data-theme="forest"] {
+    --bg-primary: #0d1410;
+    --bg-secondary: #121f18;
+    --bg-tertiary: #1a2f22;
+    --bg-elevated: #224030;
+    --accent-primary: #00DD88;
+    --accent-secondary: #44FFAA;
+    --accent-income: #00FF88;
+    --accent-expense: #FF6B6B;
+    --accent-savings: #88DDFF;
+    --text-primary: #E8F5E9;
+    --text-secondary: #A5D6A7;
+    --text-tertiary: #81C784;
+    --text-muted: #66BB6A;
+    --border-subtle: rgba(0, 221, 136, 0.1);
+    --border-medium: rgba(0, 221, 136, 0.2);
+    --border-strong: rgba(0, 221, 136, 0.3);
+    --glass-bg: rgba(0, 221, 136, 0.03);
+    --glass-bg-hover: rgba(0, 221, 136, 0.08);
+    --glass-border: rgba(0, 221, 136, 0.15);
   }
   
   * {
@@ -80,6 +156,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   
   ::selection {

@@ -1,0 +1,44 @@
+{
+  "transactions": [
+    {
+      "date": "2024-01-15",
+      "description": "Part-time job paycheck",
+      "merchant": "Campus Bookstore",
+      "amount": 875.00,
+      "currency": "USD",
+      "type": "income",
+      "category": "Income - Employment",
+      "notes": "January pay"
+    },
+    {
+      "date": "2024-01-01",
+      "description": "Monthly rent",
+      "merchant": "Campus Housing",
+      "amount": -750.00,
+      "currency": "USD",
+      "type": "expense",
+      "category": "Housing - Rent",
+      "notes": "January rent"
+    },
+    {
+      "date": "2024-01-07",
+      "description": "Grocery run",
+      "merchant": "FreshMart Grocery",
+      "amount": -62.30,
+      "currency": "USD",
+      "type": "expense",
+      "category": "Food - Groceries",
+      "notes": "Weekly groceries"
+    },
+    {
+      "date": "2024-01-12",
+      "description": "Freelance payment",
+      "merchant": "FreelancePay",
+      "amount": 250.00,
+      "currency": "USD",
+      "type": "income",
+      "category": "Income - Freelance",
+      "notes": "Logo design"
+    }
+  ]
+}
