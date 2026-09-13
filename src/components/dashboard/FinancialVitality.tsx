@@ -1,5 +1,5 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from 'framer-motion';
 import { useAppState } from '../../store/AppContext';
 import { themes, type ThemeId } from '../../theme/theme';
 import {
@@ -12,13 +12,16 @@ import {
   XCircle, Hourglass, Lightbulb, Flame, Droplets, Sun, Moon, Cloud,
   CloudRain, Wind, Star, Heart, Lock, Unlock, Search, Filter, Download,
   Upload, RefreshCw, Settings, MoreVertical, ChevronDown, Info,
-  Film, PartyPopper, Briefcase, DollarSign, Book, LayoutDashboard
+  Film, PartyPopper, Briefcase, DollarSign, Book, LayoutDashboard,
+  Dna, Microscope, FlaskConical, ScanEye, Orbit, Telescope, Binary,
+  Waves, Mountain, TreePine, Flower2, Leaf, CloudSun, Snowflake,
+  Timer, Gauge, Speedometer, TimerOff, Play, Pause, SkipForward, Rewind
 } from 'lucide-react';
 import {
   AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid,
-  BarChart, Bar, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Pie, Cell, Legend
+  BarChart, Bar, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Pie, Cell, Legend, RadialBarChart, RadialBar
 } from 'recharts';
-import { AnimatedCounter, SpotlightCard } from '../ui/LuxuryComponents';
+import { AnimatedCounter, SpotlightCard, DecryptedText, KineticText, AuroraBackground, MagneticButton, LuxurySelect } from '../ui/LuxuryComponents';
 
 // ============================================================================
 // FINANCIAL VITALITY DASHBOARD - ENHANCED WITH ALL REQUESTED FEATURES
